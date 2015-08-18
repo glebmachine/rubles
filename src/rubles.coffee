@@ -20,8 +20,10 @@ plural = (count, options) ->
 
   options[2]
 
-parseNumber = (number, count) ->
+parseNumber = (number, count, options) ->
   numeral = ''
+  options.intDenom ?= ['рубль', 'рубля', 'рублей']
+  options.intDenomGender ?= 'masculine'
 
   if number.length is 3
     first  = number.substr 0, 1
@@ -38,7 +40,10 @@ parseNumber = (number, count) ->
     numeral += "#{words[1][first]} #{words[0][second]} "
 
   if count is 0
-    numeral += plural number, ['рубль', 'рубля', 'рублей']
+    numeral += plural number, options.intDenom
+    if options.intDenomGender isnt 'masculine'
+      numeral = numeral.replace('один ', 'одна ')
+                       .replace('два ', 'две ')
 
   else if count is 1
     if numeral isnt '  '
@@ -56,8 +61,9 @@ parseNumber = (number, count) ->
 
   numeral
 
-parseDecimals = (number) ->
-  text = plural number, ['копейка', 'копейки', 'копеек']
+parseDecimals = (number, options) ->
+  options.decimalDenom ?= ['копейка', 'копейки', 'копеек']
+  text = plural number, options.decimalDenom
 
   if number is 0
     number = "00"
@@ -66,7 +72,7 @@ parseDecimals = (number) ->
 
   " #{number} #{text}"
 
-rubles = (number) ->
+rubles = (number, options = {}) ->
   return false if not number or typeof number not in ['number', 'string']
 
   if typeof number is 'string'
@@ -89,7 +95,7 @@ rubles = (number) ->
     parts = digit + parts
 
     if (parts.length is 3 or length is 0) and not isNaN toFloat parts
-      numeral = parseNumber(parts, count) + numeral
+      numeral = parseNumber(parts, count, options) + numeral
 
       parts = ''
       count++
@@ -97,7 +103,7 @@ rubles = (number) ->
     length--
 
   numeral = numeral.replace /\s+/g, ' '
-  numeral += parseDecimals toFloat decimals if decimals
+  numeral += parseDecimals (toFloat decimals), options if decimals
   numeral
 
 global = if module? then exports else window

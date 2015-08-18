@@ -199,6 +199,13 @@ negative = (rubles) ->
   text = rubles "-0.01"
   text.should.be.false
 
+custom = (rubles) ->
+  text = rubles 22,
+    intDenom: ['штука', 'штуки', 'штук'],
+    decimalDenom: ['штучка', 'штучки', 'штучек'],
+    intDenomGender: 'feminime'
+  text.should.equal 'двадцать две штуки 00 штучек'
+
 describe 'Rubles in CoffeeScript', ->
 
   {rubles} = require '../src/rubles.coffee'
@@ -214,6 +221,8 @@ describe 'Rubles in CoffeeScript', ->
   it 'billions', -> billions rubles
 
   it 'negative', -> negative rubles
+
+  it 'custom', -> custom rubles
 
 describe 'Rubles in JavaScript', ->
 
@@ -232,6 +241,8 @@ describe 'Rubles in JavaScript', ->
 
   it 'negative', -> negative rubles
 
+  it 'custom', -> custom rubles
+
 describe 'Rubles in minify JavaScript', ->
 
   {rubles} = require '../lib/rubles.min.js'
@@ -247,3 +258,7 @@ describe 'Rubles in minify JavaScript', ->
   it 'billions', -> billions rubles
 
   it 'negative', -> negative rubles
+
+  it 'custom', -> custom rubles
+
+describe 'Custom feminime denominators', ->
