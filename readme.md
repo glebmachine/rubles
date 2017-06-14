@@ -50,7 +50,7 @@ var rubles = require('rubles').rubles;
 var options = {
   intDenom: ['штука', 'штуки', 'штук'],
   intDenomGender: 'feminime',
-  decDenom: ['штучка', 'штучки', 'штучек']
+  decimalDenom: ['штучка', 'штучки', 'штучек']
 };
 var text = rubles(12.10, options);
 console.log(text); // двенадцать штук 10 штучек
